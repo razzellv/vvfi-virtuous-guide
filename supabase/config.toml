@@ -1,1 +1,7 @@
 project_id = "lmicthdpixjrkolcqkpv"
+
+[functions.analyze-facility]
+verify_jwt = false
+
+[functions.vvfi-instructor]
+verify_jwt = false

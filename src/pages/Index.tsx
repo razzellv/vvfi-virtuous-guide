@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Header } from "@/components/vvfi/Header";
-import { DataPanel } from "@/components/vvfi/DataPanel";
-import { AnalysisPanel } from "@/components/vvfi/AnalysisPanel";
-import { MetricsPanel } from "@/components/vvfi/MetricsPanel";
+import { PhotoAnalyzer } from "@/components/vvfi/PhotoAnalyzer";
+import { TextAdvisor } from "@/components/vvfi/TextAdvisor";
+import { VirtuousSupport } from "@/components/vvfi/VirtuousSupport";
+import { SOPLibrary } from "@/components/vvfi/SOPLibrary";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = () => {
-  const [selectedTab, setSelectedTab] = useState("performance");
-  const [facilityData, setFacilityData] = useState<any>(null);
-  const [analysis, setAnalysis] = useState<string>("");
+  const [selectedTab, setSelectedTab] = useState("photo");
 
   return (
     <div className="min-h-screen bg-background">
@@ -23,56 +22,49 @@ const Index = () => {
         <Header />
         
         <main className="container mx-auto px-4 py-8 space-y-6">
-          {/* Metrics Dashboard */}
-          <MetricsPanel data={facilityData} />
-          
           {/* Main Content Tabs */}
-          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-4">
-            <TabsList className="grid w-full grid-cols-3 bg-card border border-border">
+          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4 bg-card border border-border h-auto p-2">
               <TabsTrigger 
-                value="performance" 
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                value="photo" 
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3"
               >
-                Performance & Efficiency
+                📸 Photo Analyzer
               </TabsTrigger>
               <TabsTrigger 
-                value="compliance"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                value="text"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3"
               >
-                Compliance & Virtue Scores
+                💬 Text Advisor
               </TabsTrigger>
               <TabsTrigger 
-                value="training"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                value="virtuous"
+                className="data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground py-3"
               >
-                Training & Guidance
+                🛡️ Virtuous Support
+              </TabsTrigger>
+              <TabsTrigger 
+                value="sop"
+                className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground py-3"
+              >
+                📚 SOP Library
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="performance" className="space-y-4 animate-fade-in">
-              <DataPanel onDataFetched={setFacilityData} />
-              <AnalysisPanel 
-                data={facilityData} 
-                type="performance"
-                onAnalysisComplete={setAnalysis}
-              />
+            <TabsContent value="photo">
+              <PhotoAnalyzer />
             </TabsContent>
 
-            <TabsContent value="compliance" className="space-y-4 animate-fade-in">
-              <DataPanel onDataFetched={setFacilityData} />
-              <AnalysisPanel 
-                data={facilityData} 
-                type="compliance"
-                onAnalysisComplete={setAnalysis}
-              />
+            <TabsContent value="text">
+              <TextAdvisor />
             </TabsContent>
 
-            <TabsContent value="training" className="space-y-4 animate-fade-in">
-              <AnalysisPanel 
-                data={facilityData} 
-                type="training"
-                onAnalysisComplete={setAnalysis}
-              />
+            <TabsContent value="virtuous">
+              <VirtuousSupport />
+            </TabsContent>
+
+            <TabsContent value="sop">
+              <SOPLibrary />
             </TabsContent>
           </Tabs>
         </main>
