@@ -73,33 +73,36 @@ export const ActionButtons = ({ content, type, size = "default" }: ActionButtons
   };
 
   return (
-    <div className="flex gap-2 flex-wrap">
+    <div className="flex gap-1.5 sm:gap-2 flex-wrap">
       <Button 
         onClick={generatePDF}
         variant="outline"
         size={size}
-        className="border-primary text-primary hover:bg-primary/10"
+        className="border-primary text-primary hover:bg-primary/10 text-xs sm:text-sm"
       >
-        <Download className="w-3 h-3 mr-1" />
-        PDF
+        <Download className="w-3 h-3 mr-0.5 sm:mr-1" />
+        <span className="hidden sm:inline">PDF</span>
+        <span className="sm:hidden">PDF</span>
       </Button>
       <Button 
         onClick={sendToPortal}
         variant="outline"
         size={size}
-        className="border-secondary text-secondary hover:bg-secondary/10"
+        className="border-secondary text-secondary hover:bg-secondary/10 text-xs sm:text-sm"
       >
-        <Send className="w-3 h-3 mr-1" />
-        Portal
+        <Send className="w-3 h-3 mr-0.5 sm:mr-1" />
+        <span className="hidden sm:inline">Portal</span>
+        <span className="sm:hidden">Send</span>
       </Button>
       <Button 
         onClick={saveAsLesson}
         variant="outline"
         size={size}
-        className="border-accent text-accent-foreground hover:bg-accent/10"
+        className="border-accent text-accent-foreground hover:bg-accent/10 text-xs sm:text-sm"
       >
-        <Save className="w-3 h-3 mr-1" />
-        Lesson
+        <Save className="w-3 h-3 mr-0.5 sm:mr-1" />
+        <span className="hidden sm:inline">Lesson</span>
+        <span className="sm:hidden">Save</span>
       </Button>
     </div>
   );

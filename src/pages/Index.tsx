@@ -21,33 +21,37 @@ const Index = () => {
       <div className="relative z-10">
         <Header />
         
-        <main className="container mx-auto px-4 py-8 space-y-6">
+        <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-6">
           {/* Main Content Tabs */}
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 bg-card border border-border h-auto p-2">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 bg-card border border-border h-auto p-2 gap-2">
               <TabsTrigger 
                 value="photo" 
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2 lg:py-3 text-xs sm:text-sm"
               >
-                📸 Photo Analyzer
+                <span className="hidden sm:inline">📸 Photo Analyzer</span>
+                <span className="sm:hidden">📸 Photo</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="text"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-3"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2 lg:py-3 text-xs sm:text-sm"
               >
-                💬 Text Advisor
+                <span className="hidden sm:inline">💬 Text Advisor</span>
+                <span className="sm:hidden">💬 Text</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="virtuous"
-                className="data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground py-3"
+                className="data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground py-2 lg:py-3 text-xs sm:text-sm"
               >
-                🛡️ Virtuous Support
+                <span className="hidden sm:inline">🛡️ Virtuous Support</span>
+                <span className="sm:hidden">🛡️ Support</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="sop"
-                className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground py-3"
+                className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground py-2 lg:py-3 text-xs sm:text-sm"
               >
-                📚 SOP Library
+                <span className="hidden sm:inline">📚 SOP Library</span>
+                <span className="sm:hidden">📚 SOPs</span>
               </TabsTrigger>
             </TabsList>
 

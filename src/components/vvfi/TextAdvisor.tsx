@@ -91,25 +91,25 @@ export const TextAdvisor = () => {
 
   return (
     <div className="space-y-4 animate-fade-in">
-      <Card className="p-6 bg-card border border-border shadow-elevated">
+      <Card className="p-4 sm:p-6 bg-card border border-border shadow-elevated">
         <div className="flex items-center gap-2 mb-4">
-          <MessageSquare className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-bold text-foreground font-mono">
+          <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+          <h2 className="text-base sm:text-xl font-bold text-foreground font-mono">
             Text-Based Technical Advisor
           </h2>
         </div>
 
         <div className="space-y-4">
-          <div className="bg-muted rounded border border-border p-4 min-h-[400px] max-h-[400px] overflow-y-auto space-y-4">
+          <div className="bg-muted rounded border border-border p-3 sm:p-4 min-h-[300px] sm:min-h-[400px] max-h-[400px] sm:max-h-[500px] overflow-y-auto space-y-3 sm:space-y-4">
             {messages.length === 0 ? (
-              <div className="text-center text-muted-foreground py-12">
-                <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p className="font-mono">Ask a technical question to get started</p>
-                <p className="text-sm mt-2">Examples:</p>
-                <ul className="text-sm mt-2 space-y-1">
+              <div className="text-center text-muted-foreground py-8 sm:py-12">
+                <MessageSquare className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 opacity-50" />
+                <p className="font-mono text-sm sm:text-base">Ask a technical question to get started</p>
+                <p className="text-xs sm:text-sm mt-2">Examples:</p>
+                <ul className="text-xs sm:text-sm mt-2 space-y-1">
                   <li>• "Why is my flushometer leaking?"</li>
-                  <li>• "How do I calibrate a pressuretrol?"</li>
-                  <li>• "What causes a chiller to short cycle?"</li>
+                  <li className="hidden sm:list-item">• "How do I calibrate a pressuretrol?"</li>
+                  <li className="hidden sm:list-item">• "What causes a chiller to short cycle?"</li>
                 </ul>
               </div>
             ) : (
@@ -119,7 +119,7 @@ export const TextAdvisor = () => {
                   className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg p-4 ${
+                    className={`max-w-[90%] sm:max-w-[80%] rounded-lg p-3 sm:p-4 ${
                       message.role === "user"
                         ? "bg-primary text-primary-foreground"
                         : "bg-background border border-border"
@@ -128,12 +128,12 @@ export const TextAdvisor = () => {
                     {message.role === "assistant" && currentTyping === message.content ? (
                       <TypingAnimation text={message.content} speed={20} />
                     ) : (
-                      <pre className="text-sm font-mono whitespace-pre-wrap">
+                      <pre className="text-xs sm:text-sm font-mono whitespace-pre-wrap break-words">
                         {message.content}
                       </pre>
                     )}
                     {message.role === "assistant" && (
-                      <div className="mt-3 pt-3 border-t border-border">
+                      <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-border">
                         <ActionButtons content={message.content} type="text" size="sm" />
                       </div>
                     )}
@@ -155,14 +155,14 @@ export const TextAdvisor = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Type your technical question here... (Shift+Enter for new line)"
-              className="min-h-[60px] font-mono"
+              placeholder="Type your technical question here..."
+              className="min-h-[60px] sm:min-h-[80px] font-mono text-sm"
               disabled={loading}
             />
             <Button
               onClick={sendQuestion}
               disabled={loading || !input.trim()}
-              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-neon-orange"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-neon-orange h-auto"
             >
               <Send className="w-4 h-4" />
             </Button>

@@ -127,17 +127,17 @@ export const PhotoAnalyzer = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Card className="p-6 bg-card border border-border shadow-elevated">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      <Card className="p-4 sm:p-6 bg-card border border-border shadow-elevated">
         <div className="flex items-center gap-2 mb-4">
-          <Camera className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-bold text-foreground font-mono">
+          <Camera className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+          <h2 className="text-base sm:text-xl font-bold text-foreground font-mono">
             Photo & Media Analyzer
           </h2>
         </div>
 
         <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
             {previews.map((preview, index) => (
               <div key={index} className="relative group">
                 <img 
@@ -178,17 +178,19 @@ export const PhotoAnalyzer = () => {
           <Button 
             onClick={analyzePhotos}
             disabled={loading || photos.length === 0}
-            className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-neon-orange"
+            className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-neon-orange text-sm sm:text-base"
           >
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Analyzing Photos...
+                <span className="hidden sm:inline">Analyzing Photos...</span>
+                <span className="sm:hidden">Analyzing...</span>
               </>
             ) : (
               <>
                 <Brain className="w-4 h-4 mr-2" />
-                Analyze Photos
+                <span className="hidden sm:inline">Analyze Photos</span>
+                <span className="sm:hidden">Analyze</span>
               </>
             )}
           </Button>
@@ -196,15 +198,15 @@ export const PhotoAnalyzer = () => {
       </Card>
 
       {analysis && (
-        <Card className="p-6 bg-card border border-border shadow-elevated">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-foreground font-mono">
+        <Card className="p-4 sm:p-6 bg-card border border-border shadow-elevated">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+            <h3 className="text-base sm:text-lg font-bold text-foreground font-mono">
               VVFI Analysis
             </h3>
-            <ActionButtons content={analysis} type="photo" />
+            <ActionButtons content={analysis} type="photo" size="sm" />
           </div>
           
-          <div className="bg-muted rounded border border-border p-4">
+          <div className="bg-muted rounded border border-border p-3 sm:p-4">
             {showTyping ? (
               <TypingAnimation text={analysis} />
             ) : (

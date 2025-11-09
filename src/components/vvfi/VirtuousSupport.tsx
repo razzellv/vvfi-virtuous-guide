@@ -93,18 +93,18 @@ export const VirtuousSupport = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Card className="p-6 bg-card border border-border shadow-elevated">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      <Card className="p-4 sm:p-6 bg-card border border-border shadow-elevated">
         <div className="flex items-center gap-2 mb-4">
-          <Shield className="w-5 h-5 text-secondary" />
-          <h2 className="text-xl font-bold text-foreground font-mono">
+          <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-secondary" />
+          <h2 className="text-base sm:text-xl font-bold text-foreground font-mono">
             Ethical & Virtuous Support
           </h2>
         </div>
 
         <Alert className="mb-4 border-primary/50 bg-primary/10">
           <Shield className="h-4 w-4" />
-          <AlertDescription className="text-sm">
+          <AlertDescription className="text-xs sm:text-sm">
             This is a confidential space for workplace ethics, safety concerns, and personal guidance.
             All responses follow EEOC, OSHA, and legal guidelines.
           </AlertDescription>
@@ -114,15 +114,15 @@ export const VirtuousSupport = () => {
           <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Share your concern or question regarding workplace ethics, safety, harassment, discrimination, or any personal issue..."
-            className="min-h-[120px] font-mono"
+            placeholder="Share your concern or question..."
+            className="min-h-[100px] sm:min-h-[120px] font-mono text-sm"
             disabled={loading}
           />
 
           <Button
             onClick={getGuidance}
             disabled={loading || !input.trim()}
-            className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-neon-orange"
+            className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-neon-orange text-sm sm:text-base"
           >
             {loading ? (
               <>
@@ -150,15 +150,15 @@ export const VirtuousSupport = () => {
             </Alert>
           )}
 
-          <Card className="p-6 bg-card border border-border shadow-elevated">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-foreground font-mono">
+          <Card className="p-4 sm:p-6 bg-card border border-border shadow-elevated">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+              <h3 className="text-base sm:text-lg font-bold text-foreground font-mono">
                 VVFI Guidance Response
               </h3>
-              <ActionButtons content={response} type="ethical" />
+              <ActionButtons content={response} type="ethical" size="sm" />
             </div>
 
-            <div className="bg-muted rounded border border-border p-4">
+            <div className="bg-muted rounded border border-border p-3 sm:p-4">
               {showTyping ? (
                 <TypingAnimation text={response} speed={15} />
               ) : (
@@ -169,19 +169,19 @@ export const VirtuousSupport = () => {
             </div>
 
             {isCritical && (
-              <div className="mt-4 p-4 bg-destructive/10 border border-destructive rounded space-y-3">
-                <p className="text-sm font-bold text-foreground">Support Resources:</p>
-                <div className="space-y-2 text-sm">
+              <div className="mt-4 p-3 sm:p-4 bg-destructive/10 border border-destructive rounded space-y-2 sm:space-y-3">
+                <p className="text-xs sm:text-sm font-bold text-foreground">Support Resources:</p>
+                <div className="space-y-2 text-xs sm:text-sm">
                   <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    <span>HR Hotline: 1-800-XXX-XXXX</span>
+                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="break-all">HR Hotline: 1-800-XXX-XXXX</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    <span>Ethics Email: ethics@company.com</span>
+                    <Mail className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="break-all">Ethics Email: ethics@company.com</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4" />
+                    <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
                     <span>Emergency: Call 911 if immediate danger</span>
                   </div>
                 </div>
