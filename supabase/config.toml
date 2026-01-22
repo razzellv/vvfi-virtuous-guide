@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.vvfi-instructor]
 verify_jwt = false
+
+[functions.vvfo-officer]
+verify_jwt = false
