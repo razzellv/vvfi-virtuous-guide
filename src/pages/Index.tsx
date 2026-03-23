@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Header } from "@/components/vvfo/Header";
+import { FIASContextBanner } from "@/components/FIASContextBanner";
 import { OperationalAnalysis } from "@/components/vvfo/OperationalAnalysis";
 import { AssetVendorIntelligence } from "@/components/vvfo/AssetVendorIntelligence";
 import { PhotoMediaAnalysis } from "@/components/vvfo/PhotoMediaAnalysis";
@@ -13,6 +14,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
+      <FIASContextBanner />
       {/* Animated background grid */}
       <div className="fixed inset-0 opacity-5">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--primary))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary))_1px,transparent_1px)] bg-[size:50px_50px]" />
