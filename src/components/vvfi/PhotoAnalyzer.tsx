@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Camera, Upload, Brain, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { TypingAnimation } from "./TypingAnimation";
 import { ActionButtons } from "./ActionButtons";
 
@@ -81,17 +80,38 @@ export const PhotoAnalyzer = () => {
         })
       );
 
-      const { data: result, error } = await supabase.functions.invoke("vvfi-instructor", {
-        body: { 
-          mode: "photo",
-          photos: base64Photos,
-          photoCount: photos.length
+      // Build image content for Claude API
+      const imageContent = base64Photos.map(b64 => ({
+        type: "image",
+        source: {
+          type: "base64",
+          media_type: "image/jpeg",
+          data: b64.replace(/^data:image\/(jpeg|png|jpg);base64,/, ''),
         }
+      }));
+
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{
+            role: "user",
+            content: [
+              ...imageContent,
+              {
+                type: "text",
+                text: "You are VVFI — the Virtual Virtuous Facility Instructor. Analyze these facility photos as an expert facility engineer and operations advisor. Identify: equipment conditions, safety concerns, maintenance issues, compliance risks, and operational improvements. Provide specific, actionable guidance with decision defensibility principles. Be direct and professional."
+              }
+            ]
+          }]
+        })
       });
 
-      if (error) throw error;
-
-      setAnalysis(result.analysis);
+      const data = await response.json();
+      const analysisText = data.content?.[0]?.text || "Unable to analyze photos at this time.";
+      setAnalysis(analysisText);
       setShowTyping(true);
 
       // Log to unified data API

@@ -7,7 +7,7 @@ redirects = []
 [functions."*"]
 
 [build]
-publish = "/Users/razzelltaylor/Documents/vvfi-virtuous-guide/dist"
+publish = "/Users/razzelltaylor/Documents/FIAS Platform/vvfi-virtuous-guide/dist"
 publishOrigin = "ui"
 commandOrigin = "ui"
 command = "npm run build"
