@@ -6,6 +6,17 @@ import { useToast } from "@/hooks/use-toast";
 import { TypingAnimation } from "./TypingAnimation";
 import { ActionButtons } from "./ActionButtons";
 
+// Parse a data URL into the { data, mediaType } shape the Netlify function expects
+function parseDataUrl(dataUrl: string): { data: string; mediaType: string } {
+  const match = dataUrl.match(/^data:(image\/[a-z+]+);base64,(.+)$/);
+  if (match) return { mediaType: match[1], data: match[2] };
+  // Fallback — strip prefix if format doesn't match
+  return {
+    mediaType: "image/jpeg",
+    data: dataUrl.replace(/^data:[^;]+;base64,/, ""),
+  };
+}
+
 export const PhotoAnalyzer = () => {
   const [photos, setPhotos] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -27,8 +38,8 @@ export const PhotoAnalyzer = () => {
       return;
     }
 
-    const validFiles = files.filter(file => 
-      file.type === "image/jpeg" || file.type === "image/png"
+    const validFiles = files.filter(
+      (file) => file.type === "image/jpeg" || file.type === "image/png"
     );
 
     if (validFiles.length !== files.length) {
@@ -39,20 +50,20 @@ export const PhotoAnalyzer = () => {
       });
     }
 
-    setPhotos(prev => [...prev, ...validFiles]);
-    
-    validFiles.forEach(file => {
+    setPhotos((prev) => [...prev, ...validFiles]);
+
+    validFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviews(prev => [...prev, reader.result as string]);
+        setPreviews((prev) => [...prev, reader.result as string]);
       };
       reader.readAsDataURL(file);
     });
   };
 
   const removePhoto = (index: number) => {
-    setPhotos(prev => prev.filter((_, i) => i !== index));
-    setPreviews(prev => prev.filter((_, i) => i !== index));
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
   const analyzePhotos = async () => {
@@ -67,68 +78,61 @@ export const PhotoAnalyzer = () => {
 
     setLoading(true);
     setShowTyping(false);
-    
+
     try {
-      // Convert photos to base64
-      const base64Photos = await Promise.all(
-        photos.map(photo => {
-          return new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(photo);
-          });
-        })
+      // Read all photos as data URLs
+      const dataUrls = await Promise.all(
+        photos.map(
+          (photo) =>
+            new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.readAsDataURL(photo);
+            })
+        )
       );
 
-      // Build image content for Claude API
-      const imageContent = base64Photos.map(b64 => ({
-        type: "image",
-        source: {
-          type: "base64",
-          media_type: "image/jpeg",
-          data: b64.replace(/^data:image\/(jpeg|png|jpg);base64,/, ''),
-        }
-      }));
+      // Parse into { data, mediaType } for the serverless function
+      const images = dataUrls.map(parseDataUrl);
 
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      // POST to the Netlify serverless function — Anthropic API is called
+      // server-side to avoid CORS (browser cannot call api.anthropic.com directly).
+      const response = await fetch("/.netlify/functions/analyze-photo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          messages: [{
-            role: "user",
-            content: [
-              ...imageContent,
-              {
-                type: "text",
-                text: "You are VVFI — the Virtual Virtuous Facility Instructor. Analyze these facility photos as an expert facility engineer and operations advisor. Identify: equipment conditions, safety concerns, maintenance issues, compliance risks, and operational improvements. Provide specific, actionable guidance with decision defensibility principles. Be direct and professional."
-              }
-            ]
-          }]
-        })
+        body: JSON.stringify({ images }),
       });
 
-      const data = await response.json();
-      const analysisText = data.content?.[0]?.text || "Unable to analyze photos at this time.";
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || `Request failed: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const analysisText =
+        result.analysis || "Unable to analyze photos at this time.";
+
       setAnalysis(analysisText);
       setShowTyping(true);
 
-      // Log to unified data API
-      await fetch("https://script.google.com/macros/s/AKfycbyYy6ZMsB1gNMEpAgTokVRv5vLJSr-uSRopkxX4968jjUrVdRfQtRLm6mc85R4apJMHww/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          User: "System",
-          Mode: "Photo",
-          Timestamp: new Date().toISOString(),
-          Summary: "Photo analysis completed",
-          Recommendations: result.analysis,
-          Severity: result.severity || "Moderate",
-          Confidence: result.confidence || 0.85
-        })
-      });
+      // Log to unified data API — fire-and-forget, no-cors
+      fetch(
+        "https://script.google.com/macros/s/AKfycbyYy6ZMsB1gNMEpAgTokVRv5vLJSr-uSRopkxX4968jjUrVdRfQtRLm6mc85R4apJMHww/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            User: "System",
+            Mode: "Photo",
+            Timestamp: new Date().toISOString(),
+            Summary: "Photo analysis completed",
+            Recommendations: analysisText,
+            Severity: "Moderate",
+            Confidence: 0.85,
+          }),
+        }
+      ).catch(() => {});
 
       toast({
         title: "Analysis Complete",
@@ -160,8 +164,8 @@ export const PhotoAnalyzer = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
             {previews.map((preview, index) => (
               <div key={index} className="relative group">
-                <img 
-                  src={preview} 
+                <img
+                  src={preview}
                   alt={`Upload ${index + 1}`}
                   className="w-full h-32 object-cover rounded border border-border"
                 />
@@ -195,7 +199,7 @@ export const PhotoAnalyzer = () => {
             )}
           </div>
 
-          <Button 
+          <Button
             onClick={analyzePhotos}
             disabled={loading || photos.length === 0}
             className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-neon-orange text-sm sm:text-base"
@@ -225,7 +229,7 @@ export const PhotoAnalyzer = () => {
             </h3>
             <ActionButtons content={analysis} type="photo" size="sm" />
           </div>
-          
+
           <div className="bg-muted rounded border border-border p-3 sm:p-4">
             {showTyping ? (
               <TypingAnimation text={analysis} />
